@@ -1,0 +1,7 @@
+https://news.ycombinator.com/item?id=22285843
+Unexpected places where you can use null bytes: gets, fgets and scanf("%s"). All three will read and store null bytes into your string from the input, and keep going: gets and fgets only terminate at a newline character and scanf only terminates at whitespace (which doesn't include the null byte).
+gets and scanf("%s") are also horrifically unsafe. gets is well-known to be unsafe (to the point where you'll almost certainly get a compiler warning for using it). However, scanf("%s") is unsafe for exactly the same reason (no bound on the buffer length) yet will not produce a compiler warning. Add to the fact that these functions will accept null bytes, and you have a very dangerous buffer overflow waiting to happen.
+This is why you _always_ write:
+    if (*s && *s != '\n' ...)
+and never:
+    if (*s != '\n' ...)
